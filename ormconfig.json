@@ -1,0 +1,9 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "username": "siddiqui",
+  "password": "@Mu786Mu@",
+  "database": "dth_clone_nestjs",
+  "entities": ["src/**/**.entity{.ts,.js}"],
+  "synchronize": true
+}
