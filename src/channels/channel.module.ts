@@ -11,8 +11,8 @@ import { JwtService } from '@nestjs/jwt';
   imports: [TypeOrmModule.forFeature([Channel]), SharedModule],
   providers: [ ChannelService, JwtService],
   controllers: [ChannelController],
+  exports:[ChannelService, JwtService]
 })
-//export class PackModule{}
 
 export class ChannelModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -12,7 +12,6 @@ import { JwtService } from '@nestjs/jwt';
   providers: [ UsersService ,JwtService ],
   controllers: [UsersController],
 })
-// class UsersModule{}
 
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -1,5 +1,3 @@
-// auth/authentication.middleware.ts
-
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { JwtService } from '../auth/auth.service';
@@ -19,8 +17,9 @@ export class verifyUser implements NestMiddleware {
     
     try {
       const decodedData = this.jwtService.verifyToken(accessToken);
-      const {role} = await this.userServices.getUserByEmail(decodedData.email)
+      const {id,role} = await this.userServices.getUserByEmail(decodedData.email)
       req.body.role = role;
+      req.body.userId = id;
       next();
     } catch (error) {
       throw new UnauthorizedException('Invalid access token');
