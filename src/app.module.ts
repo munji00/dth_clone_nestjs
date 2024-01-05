@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module} from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
@@ -9,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { PackModule } from './packages/package.module';
 import { ChannelModule } from './channels/channel.module';
 import {config} from 'dotenv';
+import { SubscriptionModule } from './subscriptions/subscription.module';
+import {APP_GUARD} from '@nestjs/core';
+import { AccessGuard } from './guards/access.guards';
 
 
 config();
@@ -26,7 +29,13 @@ config();
       entities: [User, Package, Channel, User_Plan],
       synchronize: true,
     }),
-   UsersModule, AuthModule, PackModule, ChannelModule
+   UsersModule, AuthModule, PackModule, ChannelModule, SubscriptionModule
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessGuard,
+    },
   ],
 })
 export class AppModule {}

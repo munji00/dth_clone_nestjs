@@ -1,14 +1,16 @@
-import { Controller, Post, Body, Get, Delete,Param, Res} from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete,Param, Res, UseGuards} from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import {ChannelService } from './channel.service';
 import { Response } from 'express';
 import { ChannelDto } from './dto/channel.td';
+import {Roles} from '../customDecorator/rolesReflector'
 
 @Controller('channel')
 export class ChannelController {
     constructor(private service: ChannelService) { }
 
     @Post('create')
+    @Roles(2)
     async createChannel(@Body() channel:ChannelDto ,@Res() res:Response){
         try {
             const newChannel = await this.service.createChannel(channel);
@@ -40,6 +42,7 @@ export class ChannelController {
 
 
     @Delete(':id')
+    @Roles(2)
      async deleteChannel(@Param() params) {
         try {
             await this.service.deleteChannel(params.id);

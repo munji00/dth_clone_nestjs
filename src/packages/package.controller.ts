@@ -3,11 +3,25 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import {PackService } from './package.service';
 import { Response } from 'express';
 import { packageDto } from './dto/package.td';
+import { Roles } from '../customDecorator/rolesReflector';
+import { SubscriptionDto } from 'src/subscriptions/dto/subscription.td';
 
 @Controller('plan')
-export class PackController {
+export class PlanController {
     constructor(private service: PackService) { }
 
+    @Post('subscribe/:id')
+    async subscribe(@Body() subscription:SubscriptionDto , @Param() params ,@Res() res:Response){
+        try {
+            const newSubscription = await this.service.createSubscription({st_date:new Date(), userId:subscription.userId, packageId:params.id});
+            res.status(201).send({success:true, newSubscription})
+        } catch (error) {
+            throw new HttpException('internal server error' , HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+    
+
+    @Roles(2)
     @Post('create')
     async createPack(@Body() pack:packageDto ,@Res() res:Response){
         try {
@@ -18,7 +32,7 @@ export class PackController {
         }
     }
 
-    @Get('packs')
+    @Get('get-all')
     async getPacks(@Res() res:Response){
         try {
         const packData = await this.service.getPacks();
@@ -39,6 +53,18 @@ export class PackController {
     }
 
 
+    
+    @Delete('unsubscribe/:id')
+     async unsubscribe(@Param() params) {
+        try {
+            await this.service.deleteSubscription(params.id);
+            return "Plan Unsubscribe Successfully"
+        } catch (error) {
+            throw new HttpException('internal server error', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    @Roles(2)
     @Delete(':id')
      async deletePack(@Param() params) {
         try {
